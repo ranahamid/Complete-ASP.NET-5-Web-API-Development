@@ -14,7 +14,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApplication5.Configurations;
 using WebApplication5.Data;
-
+using WebApplication5.IRepository;
+using WebApplication5.Repository;
 
 namespace WebApplication5
 {
@@ -37,11 +38,14 @@ namespace WebApplication5
                 x.AddPolicy("AllowAll", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
             services.AddAutoMapper(typeof(MapperInitilizer));
+            services.AddTransient<IUnitofWork, UnitofWork>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Web Application", Version = "v1" });
             });
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(x=>x.SerializerSettings.ReferenceLoopHandling= Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,6 +67,10 @@ namespace WebApplication5
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name:"default",
+                    pattern:"{controller=Home}/{Action=Index}/{id?}"
+                    );
                 endpoints.MapControllers();
             });
         }
