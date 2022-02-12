@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApplication5.Data
 {
-    public class DatabaseContext: DbContext
+    public class DatabaseContext: IdentityDbContext<ApiUser>
     {
         public DatabaseContext(DbContextOptions options ): base(options)
         {
@@ -10,6 +11,8 @@ namespace WebApplication5.Data
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            base.OnModelCreating(builder);
+
             builder.Entity<Country>().HasData(
                 new Country { Id = 1, ShortName = "BD", Name = "Bangladesh", CountryCode = 880, GMTOffset = 360 },
                new Country { Id = 2, ShortName = "IND", Name = "India", CountryCode = 91, GMTOffset = 330 }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -31,8 +32,10 @@ namespace WebApplication5
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DatabaseContext>(x => x.UseSqlServer(Configuration.GetConnectionString("sqlConnection"))); 
-         
+            services.AddDbContext<DatabaseContext>(x => x.UseSqlServer(Configuration.GetConnectionString("sqlConnection")));
+            services.AddAuthentication();
+            services.ConfigureIdentity();
+
             services.AddCors(x =>
             {
                 x.AddPolicy("AllowAll", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

@@ -14,8 +14,7 @@ namespace WebApplication5.Controllers
     [ApiController]
     public class CountryController : ControllerBase
     {
-        private readonly IUnitofWork _unitOfWork;
-        // private readonly ILogger _logger;
+        private readonly IUnitofWork _unitOfWork; 
         private readonly ILogger<CountryController> _logger;
         private readonly IMapper _mapper;
               
