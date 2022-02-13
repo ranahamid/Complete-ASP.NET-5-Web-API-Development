@@ -9,15 +9,15 @@ namespace WebApplication5.Configurations
     {
         public MapperInitilizer()
         {
-            CreateMap<Country,CountryDTO>().ReverseMap();
-            CreateMap<Country, CreateCountryDTO>().ReverseMap();
+            CreateMap<Country,CountryDto>().ReverseMap();
+            CreateMap<Country, CreateCountryDto>().ReverseMap();
 
-            CreateMap<Hotel, HotelDTO>().ReverseMap();
-            CreateMap<Hotel, CreateHotelDTO>().ReverseMap();
+            CreateMap<Hotel, HotelDto>().ReverseMap();
+            CreateMap<Hotel, CreateHotelDto>().ReverseMap();
 
-            CreateMap<ApiUser, UserDTO>().ReverseMap();
-            CreateMap<ApiUser, LoginDTO>().ReverseMap();
-            CreateMap<LoginDTO, UserDTO>().ReverseMap();
+            CreateMap<ApiUser, UserDto>().ReverseMap();
+            CreateMap<ApiUser, LoginDto>().ReverseMap();
+            CreateMap<LoginDto, UserDto>().ReverseMap();
 
         }
     }

@@ -34,7 +34,7 @@ namespace WebApplication5.Controllers
             try
             {
                 var hotels = await _unitOfWork.Hotels.GetAll();
-                var result = _mapper.Map<IList<HotelDTO>>(hotels);
+                var result = _mapper.Map<IList<HotelDto>>(hotels);
 
                 return Ok(result);
             }
@@ -52,7 +52,7 @@ namespace WebApplication5.Controllers
             try
             {
                 var Hotel = await _unitOfWork.Hotels.Get(x => x.Id == id, new List<string> { "Country" });
-                var result = _mapper.Map<HotelDTO>(Hotel);
+                var result = _mapper.Map<HotelDto>(Hotel);
 
                 return Ok(result);
             }

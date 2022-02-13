@@ -17,6 +17,7 @@ using WebApplication5.Configurations;
 using WebApplication5.Data;
 using WebApplication5.IRepository;
 using WebApplication5.Repository;
+using WebApplication5.Services;
 
 namespace WebApplication5
 {
@@ -35,14 +36,14 @@ namespace WebApplication5
             services.AddDbContext<DatabaseContext>(x => x.UseSqlServer(Configuration.GetConnectionString("sqlConnection")));
             services.AddAuthentication();
             services.ConfigureIdentity();
-
+            services.ConfigureJwt(configuration:Configuration);
             services.AddCors(x =>
             {
                 x.AddPolicy("AllowAll", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
             services.AddAutoMapper(typeof(MapperInitilizer));
             services.AddTransient<IUnitofWork, UnitofWork>();
-
+            services.AddScoped<IAuthManager, AuthManager>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Web Application", Version = "v1" });

@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication5.Models
 {
-    public class CountryDTO: CreateCountryDTO
+    public class CountryDto: CreateCountryDto
     {
         public int Id { get; set; }
-        public virtual IList<HotelDTO> Hotels { get; set; }
+        public virtual IList<HotelDto> Hotels { get; set; }
     }
-    public class CreateCountryDTO
+    public class CreateCountryDto
     { 
         [Required]
         [StringLength(100, ErrorMessage = "Country Name is too long.")]

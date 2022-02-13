@@ -3,13 +3,13 @@ using WebApplication5.Data;
 
 namespace WebApplication5.Models
 {
-    public class HotelDTO: CreateHotelDTO
+    public class HotelDto: CreateHotelDto
     {
         public int Id { get; set; }        
-        public CountryDTO Country { get; set; }
+        public CountryDto Country { get; set; }
     }
 
-    public class CreateHotelDTO
+    public class CreateHotelDto
     {
      
         [Required]

@@ -33,7 +33,7 @@ namespace WebApplication5.Controllers
             try
             {
                 var countries = await _unitOfWork.Countries.GetAll();
-                var result = _mapper.Map<IList<CountryDTO>>(countries);
+                var result = _mapper.Map<IList<CountryDto>>(countries);
 
                 return Ok(result);
             }
@@ -51,7 +51,7 @@ namespace WebApplication5.Controllers
             try
             {
                 var country = await _unitOfWork.Countries.Get(x=>x.Id==id, new List<string> { "Hotels"});
-                var result = _mapper.Map<CountryDTO>(country);
+                var result = _mapper.Map<CountryDto>(country);
 
                 return Ok(result);
             }

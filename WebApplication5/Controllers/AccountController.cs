@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using WebApplication5.Data;
 using WebApplication5.IRepository;
 using WebApplication5.Models;
+using WebApplication5.Services;
 
 namespace WebApplication5.Controllers
 {
@@ -23,19 +24,21 @@ namespace WebApplication5.Controllers
         // private readonly ILogger _logger;
         private readonly ILogger<AccountController> _logger;
         private readonly IMapper _mapper;
-
-        public AccountController(UserManager<ApiUser> userManager, /*SignInManager<ApiUser> signInManager,*/ IUnitofWork unitOfWork, ILogger<AccountController> logger, IMapper mapper)
+        private readonly IAuthManager _authManager;
+        public AccountController(UserManager<ApiUser> userManager, /*SignInManager<ApiUser> signInManager,*/ IUnitofWork unitOfWork, ILogger<AccountController> logger,
+            IMapper mapper, IAuthManager authManager)
         {
             _userManager = userManager;
             //_signInManager = signInManager;
             _unitOfWork = unitOfWork;
             _logger = logger;
             _mapper = mapper;
+            _authManager = authManager;
         }
 
         [HttpPost]
        // [Route("Register")]
-        public async Task<IActionResult> Register([FromBody] UserDTO userDto)
+        public async Task<IActionResult> Register([FromBody] UserDto userDto)
         {
             _logger.LogInformation($"Registration attempt for {userDto.Email}");
             if (!ModelState.IsValid)
@@ -73,41 +76,34 @@ namespace WebApplication5.Controllers
                 //return StatusCode(500, "Internal Server Error. Please try again later.");
             }
         }
-        //[HttpPost]
-        //[Route("Login")]
-        //public async Task<IActionResult> Login([FromBody] LoginDTO loginDto)
-        //{
-        //    _logger.LogInformation($"Login attempt for {loginDto.Email}");
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-        //    try
-        //    {
+        [HttpPost]
+        [Route("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+        {
+            _logger.LogInformation($"Login attempt for {loginDto.Email}");
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
 
-        //        var result = await _signInManager.PasswordSignInAsync(loginDto.Email, loginDto.Password, isPersistent: false, lockoutOnFailure: false);
-
-        //        if (result.IsLockedOut)
-        //        {
-        //            return Unauthorized(loginDto);
-        //        }
-        //        if (result.IsNotAllowed)
-        //        {
-        //            return Unauthorized(loginDto);
-        //        }
-        //        if (result.RequiresTwoFactor)
-        //        {
-        //            return Unauthorized(loginDto);
-        //        }
-        //        return Accepted();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, $"Something went wrong in the {nameof(Login)}");
-        //        return Problem($"Something went wrong in the {nameof(Login)}", statusCode: 500);
-        //        //return StatusCode(500, "Internal Server Error. Please try again later.");
-        //    }
-        //}
+                if (!await _authManager.ValidateUser(loginDto))
+                {
+                    return Unauthorized();
+                }
+                return Accepted(new
+                {
+                    Token = await  _authManager.CreateToken(),
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Something went wrong in the {nameof(Login)}");
+                return Problem($"Something went wrong in the {nameof(Login)}", statusCode: 500);
+                //return StatusCode(500, "Internal Server Error. Please try again later.");
+            }
+        }
 
 
     }

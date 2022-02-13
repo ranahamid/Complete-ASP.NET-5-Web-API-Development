@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication5.Models
 {
-    public class LoginDTO
+    public class LoginDto
     {
         [Required]
         [DataType(DataType.EmailAddress)]
@@ -14,7 +14,7 @@ namespace WebApplication5.Models
         [StringLength(15, ErrorMessage = "Your password is limited to {2} to {1} characters.", MinimumLength = 6)]
         public string Password { get; set; }
     }
-    public class UserDTO: LoginDTO
+    public class UserDto: LoginDto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
