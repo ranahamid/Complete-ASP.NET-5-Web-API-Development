@@ -10,7 +10,7 @@ using WebApplication5.Models;
 
 namespace WebApplication5.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Country")]
     [ApiController]
     public class CountryController : ControllerBase
     {

@@ -16,6 +16,9 @@ namespace WebApplication5.Configurations
             CreateMap<Hotel, CreateHotelDTO>().ReverseMap();
 
             CreateMap<ApiUser, UserDTO>().ReverseMap();
+            CreateMap<ApiUser, LoginDTO>().ReverseMap();
+            CreateMap<LoginDTO, UserDTO>().ReverseMap();
+
         }
     }
 }

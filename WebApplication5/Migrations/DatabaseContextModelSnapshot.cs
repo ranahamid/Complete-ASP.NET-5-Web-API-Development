@@ -47,6 +47,22 @@ namespace WebApplication5.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "65d030af-7d75-4151-8dd1-8f9950ddb9d3",
+                            ConcurrencyStamp = "2ba924a6-da5c-4185-8989-909e064796c9",
+                            Name = "User",
+                            NormalizedName = "Name"
+                        },
+                        new
+                        {
+                            Id = "74e435e4-aad4-4f6c-9670-eabd9fe91813",
+                            ConcurrencyStamp = "d8862fc5-d069-4478-af3b-85d5d07d1f70",
+                            Name = "Admin",
+                            NormalizedName = "Admin"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -256,16 +272,16 @@ namespace WebApplication5.Migrations
                             Id = 1,
                             CountryCode = 880,
                             GMTOffset = 360,
-                            Name = "Bangladesh",
-                            ShortName = "BD"
+                            Name = "Australia",
+                            ShortName = "AUS"
                         },
                         new
                         {
                             Id = 2,
                             CountryCode = 91,
                             GMTOffset = 330,
-                            Name = "India",
-                            ShortName = "IND"
+                            Name = "Pakistan",
+                            ShortName = "PAK"
                         });
                 });
 
@@ -299,18 +315,34 @@ namespace WebApplication5.Migrations
                         new
                         {
                             Id = 1,
-                            Address = "CoxsBazar",
+                            Address = "Dhaka",
                             CountryId = 1,
-                            Name = "Hotel Cox Today",
-                            Rating = 4.7000000000000002
+                            Name = "Dhaka Regency",
+                            Rating = 4.9000000000000004
                         },
                         new
                         {
                             Id = 2,
-                            Address = "Rajasthan",
+                            Address = "Kurigram",
                             CountryId = 2,
-                            Name = "Jodha Akbar",
-                            Rating = 4.5
+                            Name = "Bhunga AK",
+                            Rating = 4.0999999999999996
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Address = "Dhaka 2",
+                            CountryId = 1,
+                            Name = "Dhaka Regency",
+                            Rating = 4.9000000000000004
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Address = "Kurigram 2",
+                            CountryId = 2,
+                            Name = "Bhunga AK",
+                            Rating = 4.0999999999999996
                         });
                 });
 
