@@ -50,7 +50,7 @@ namespace WebApplication5.Controllers
         [HttpGet("{id:int}",Name = "GetHotel")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetHotel(int id)
         {
             try
