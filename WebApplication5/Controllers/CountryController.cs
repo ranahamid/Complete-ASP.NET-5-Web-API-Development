@@ -45,7 +45,7 @@ namespace WebApplication5.Controllers
                 return StatusCode(500,"Internal Server Error. Please try again later.");
             }
         }
-        [HttpGet("{id:int}", Name = "GetCountry"))]
+        [HttpGet("{id:int}", Name = "GetCountry")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCountry(int id)
