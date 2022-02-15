@@ -66,15 +66,15 @@ namespace WebApplication5
             app.UseHttpsRedirection();
             app.UseCors("");
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name:"default",
-                    pattern:"{controller=Home}/{Action=Index}/{id?}"
-                    );
+                //endpoints.MapControllerRoute(
+                //    name:"default",
+                //    pattern:"{controller=Home}/{Action=Index}/{id?}"
+                //    );
                 endpoints.MapControllers();
             });
         }

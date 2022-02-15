@@ -41,6 +41,7 @@ namespace WebApplication5.Services
                 token = new JwtSecurityToken
                 (
                     issuer: jwtSettings.GetSection("Issuer").Value,
+                    audience: jwtSettings.GetSection("Audience").Value,
                     claims: claims,
                     expires: expiration,
                     signingCredentials: signingCredentials);
@@ -53,7 +54,12 @@ namespace WebApplication5.Services
         {
             var claims = new List<Claim>
             {
+                new Claim(JwtRegisteredClaimNames.Sub, _user.UserName),
                 new Claim(ClaimTypes.Name, _user.UserName),
+                new Claim("fullName", _user.FirstName + " " + _user.LastName),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Aud, _configuration["Jwt:Audience"]),
+                new Claim(JwtRegisteredClaimNames.Iss, _configuration["Jwt:Issuer"])
             };
             var roles = await _userManager.GetRolesAsync(_user);
             foreach (var role in roles)

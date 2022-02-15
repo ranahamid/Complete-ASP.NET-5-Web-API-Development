@@ -13,7 +13,7 @@ namespace WebApplication5
     {
         public static void ConfigureIdentity(this IServiceCollection services)
         {
-            var builder = services.AddIdentityCore<ApiUser>(q=>q.User.RequireUniqueEmail=true);
+            var builder = services.AddIdentityCore<ApiUser>(q => q.User.RequireUniqueEmail = true);
             builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), services);
             builder.AddEntityFrameworkStores<DatabaseContext>().AddDefaultTokenProviders();
         }
@@ -32,15 +32,19 @@ namespace WebApplication5
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(x =>
             {
-                
-                    x.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = jwtSettings.GetSection("Issuer").Value,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
-                    };
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true, //missing in first 
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtSettings.GetSection("Issuer").Value,
+                    ValidAudience = jwtSettings.GetSection("Audience").Value,//missing in first 
+                    ClockSkew = TimeSpan.Zero,//missing in first 
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+                };
             });
         }
     }
