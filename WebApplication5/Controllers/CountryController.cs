@@ -91,5 +91,40 @@ namespace WebApplication5.Controllers
                 return StatusCode(500, "Internal Server Error. Please try again later.");
             }
         }
+
+
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize]
+        public async Task<IActionResult> UpdateCountry([FromBody] UpdateCountryDto countryDto)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError($"Invalid put attempt in  {nameof(UpdateCountry)}");
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var country = await _unitOfWork.Countries.Get(x => x.Id == countryDto.Id);
+                if (country == null)
+                {
+                    _logger.LogError($"Invalid country update in  {nameof(UpdateCountry)}");
+                    return BadRequest("Invalid country update");
+                }
+                _mapper.Map(countryDto, country);
+                 _unitOfWork.Countries.Update(country);
+                await _unitOfWork.Save();
+                return CreatedAtRoute("GetCountry", new { id = country.Id }, country);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Something went wrong in the {nameof(UpdateCountry)}");
+                return StatusCode(500, "Internal Server Error. Please try again later.");
+            }
+        }
     }
 }
