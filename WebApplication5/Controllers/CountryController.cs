@@ -132,7 +132,7 @@ namespace WebApplication5.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [Authorize]
+       // [Authorize]
         public async Task<IActionResult> DeleteCountry(int id)
         {
             if (id < 1)
