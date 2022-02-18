@@ -62,7 +62,7 @@ namespace WebApplication5
             }
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Web Application v1"));
-
+            app.ConfigureException();
             app.UseHttpsRedirection();
             app.UseCors("");
             app.UseRouting();
