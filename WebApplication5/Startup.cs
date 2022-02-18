@@ -49,7 +49,7 @@ namespace WebApplication5
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Web Application", Version = "v1" });
             });
             services.AddControllers().AddNewtonsoftJson(x=>x.SerializerSettings.ReferenceLoopHandling= Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-            
+            services.ConfigureVersioning();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,6 +63,7 @@ namespace WebApplication5
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Web Application v1"));
             app.ConfigureException();
+     
             app.UseHttpsRedirection();
             app.UseCors("");
             app.UseRouting();
