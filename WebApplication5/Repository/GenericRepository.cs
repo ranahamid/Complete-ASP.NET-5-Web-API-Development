@@ -23,8 +23,10 @@ namespace WebApplication5.Repository
       public async Task  Delete(int id)
         {
             var entity= await db.FindAsync(id);
-            db.Remove(entity);
-            //throw new NotImplementedException();
+            if (entity != null)
+            {
+                db.Remove(entity);
+            }
         }
 
         public  void DeleteRange(IEnumerable<T> entity)

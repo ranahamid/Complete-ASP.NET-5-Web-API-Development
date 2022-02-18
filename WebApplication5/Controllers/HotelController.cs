@@ -129,5 +129,36 @@ namespace WebApplication5.Controllers
             }
         }
 
+        [HttpDelete("{id:int}", Name = "DeleteHotel")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize]
+        public async Task<IActionResult> DeleteHotel(int id)
+        {
+            if ( id < 1)
+            {
+                _logger.LogError($"Invalid Delete attempt in  {nameof(DeleteHotel)}");
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var hotel = await _unitOfWork.Hotels.Get(x => x.Id == id);
+                if (hotel != null)
+                {
+                    await _unitOfWork.Hotels.Delete(id); 
+                    await _unitOfWork.Save();
+                }
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Something went wrong in the {nameof(DeleteHotel)}");
+                return StatusCode(500, "Internal Server Error. Please try again later.");
+            }
+        }
+
+
     }
 }

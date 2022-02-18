@@ -126,5 +126,35 @@ namespace WebApplication5.Controllers
                 return StatusCode(500, "Internal Server Error. Please try again later.");
             }
         }
+
+        [HttpDelete("{id:int}", Name = "DeleteCountry")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize]
+        public async Task<IActionResult> DeleteCountry(int id)
+        {
+            if (id < 1)
+            {
+                _logger.LogError($"Invalid Delete attempt in  {nameof(DeleteCountry)}");
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var hotel = await _unitOfWork.Countries.Get(x => x.Id == id);
+                if (hotel != null)
+                {
+                    await _unitOfWork.Countries.Delete(id);
+                    await _unitOfWork.Save();
+                }
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Something went wrong in the {nameof(DeleteCountry)}");
+                return StatusCode(500, "Internal Server Error. Please try again later.");
+            }
+        }
     }
 }
