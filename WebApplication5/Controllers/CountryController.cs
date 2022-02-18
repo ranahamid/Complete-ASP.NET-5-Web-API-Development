@@ -30,11 +30,11 @@ namespace WebApplication5.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetCountries()
+        public async Task<IActionResult> GetCountries(/*[FromQuery]*/ RequestParams model)
         {
             try
             {
-                var countries = await _unitOfWork.Countries.GetAll();
+                var countries = await _unitOfWork.Countries.GetAll(model);
                 var result = _mapper.Map<IList<CountryDto>>(countries);
 
                 return Ok(result);

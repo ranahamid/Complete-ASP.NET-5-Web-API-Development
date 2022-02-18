@@ -15,9 +15,7 @@ namespace WebApplication5.Data
             base.OnModelCreating(builder);
             builder.ApplyConfiguration(new CountryConfiguration());
             builder.ApplyConfiguration(new HotelConfiguration());
-            builder.ApplyConfiguration(new RoleConfiguration());
-
-
+            builder.ApplyConfiguration(new RoleConfiguration()); 
         }
         public DbSet<Country> Countries { get; set; }
         public DbSet<Hotel> Hotels { get; set; }
