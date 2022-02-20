@@ -21,7 +21,7 @@ namespace WebApplication5
             //        rollingInterval:RollingInterval.Day,rollOnFileSizeLimit:true,retainedFileCountLimit:10).CreateLogger();
 
             Log.Logger = new LoggerConfiguration()
-    .WriteTo.File(new CompactJsonFormatter(), "log.txt")
+    .WriteTo.File(new CompactJsonFormatter(), "logs\\log.txt")
     .CreateLogger();
 
             try

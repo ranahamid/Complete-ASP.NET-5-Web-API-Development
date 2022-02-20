@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCoreRateLimit;
 using WebApplication5.Configurations;
 using WebApplication5.Data;
 using WebApplication5.IRepository;
@@ -34,8 +35,19 @@ namespace WebApplication5
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DatabaseContext>(x => x.UseSqlServer(Configuration.GetConnectionString("sqlConnection")));
+            //services.AddResponseCaching();
+            //services.AddHttpCacheHeaders();
+
+            services.AddMemoryCache();
+            services.AddInMemoryRateLimiting();
+
+            services.ConfigureRateLimiting();
+            services.AddHttpContextAccessor();
+
+            services.ConfigureHttpCacheHeaders();
             services.AddAuthentication();
             services.ConfigureIdentity();
+     
             services.ConfigureJwt(configuration:Configuration);
             services.AddCors(x =>
             {
@@ -48,8 +60,16 @@ namespace WebApplication5
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Web Application", Version = "v1" });
             });
-            services.AddControllers().AddNewtonsoftJson(x=>x.SerializerSettings.ReferenceLoopHandling= Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-            services.ConfigureVersioning();
+            services.AddControllers(x =>
+            {
+                x.CacheProfiles.Add("120SecondsCacheDuration", new CacheProfile
+                {
+                    Duration = 120,
+                    Location = ResponseCacheLocation.Any,
+                });
+            }).AddNewtonsoftJson(x=>x.SerializerSettings.ReferenceLoopHandling= Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.ConfigureVersion();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,11 +81,23 @@ namespace WebApplication5
 
             }
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Web Application v1"));
+            //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Web Application v1"));
+            app.UseSwaggerUI(c =>
+            {
+                var swaggerBasePath = string.IsNullOrWhiteSpace(c.RoutePrefix) ? "." : "..";
+                c.SwaggerEndpoint($"{swaggerBasePath}/swagger/v1/swagger.json", "Hotel Listing API");
+            });
             app.ConfigureException();
      
             app.UseHttpsRedirection();
-            app.UseCors("");
+            // UseCors must be called before UseResponseCaching
+            app.UseCors("AllowAll");
+
+            app.UseResponseCaching();
+            app.UseHttpCacheHeaders();
+           
+            app.UseIpRateLimiting();
+
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();

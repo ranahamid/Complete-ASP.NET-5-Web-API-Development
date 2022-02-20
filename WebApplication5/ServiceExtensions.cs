@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
+using AspNetCoreRateLimit;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -71,7 +74,7 @@ namespace WebApplication5
                         {
                             StatusCode = context.Response.StatusCode,
                             Message = "Internal Server Error. Please try again later.",
-                            Success=false,
+                            Success = false,
                             Data = null,
                         }.ToString());
                     }
@@ -80,16 +83,59 @@ namespace WebApplication5
             });
         }
 
-        public static void ConfigureVersioning(this IServiceCollection service)
+        public static void ConfigureVersion(this IServiceCollection service)
         {
 
             service.AddApiVersioning(x =>
             {
-                x.ReportApiVersions =true;
+                x.ReportApiVersions = true;
                 x.AssumeDefaultVersionWhenUnspecified = true;
                 x.DefaultApiVersion = new ApiVersion(1, 0);
                 //x.ApiVersionReader = new HeaderApiVersionReader("api-version");
             });
+        }
+        public static void ConfigureHttpCacheHeaders(this IServiceCollection service)
+        {
+
+            service.AddResponseCaching();
+            service.AddHttpCacheHeaders(x =>
+                {
+                    x.MaxAge = 135;
+                    x.CacheLocation = CacheLocation.Public;
+                },
+                y =>
+                {
+                    y.MustRevalidate=true;
+                });
+        }
+
+        public static void ConfigureRateLimiting(this IServiceCollection service)
+        {
+            var rateLimitRules = new List<RateLimitRule>
+            {
+                new RateLimitRule
+                {
+                    Endpoint = "*",
+                    Limit = 1,
+                    Period = "10s",
+                },
+                new RateLimitRule
+                {
+                    Endpoint = "*",
+                    Period = "1h",
+                    Limit = 360,
+                }
+            };
+
+            service.Configure<IpRateLimitOptions>(x =>
+            {
+                x.GeneralRules = rateLimitRules;
+            });
+            service.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+            service.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+            service.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
+
         }
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Authorization;
 using WebApplication5.Data;
 using WebApplication5.IRepository;
@@ -30,6 +31,9 @@ namespace WebApplication5.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ResponseCache(CacheProfileName = "120SecondsCacheDuration")]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Private, MaxAge = 60)]
+        [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> GetCountries(/*[FromQuery]*/ RequestParams model)
         {
 
