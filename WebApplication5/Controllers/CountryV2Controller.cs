@@ -17,7 +17,7 @@ namespace WebApplication5.Controllers
     [ApiController]
     public class CountryV2Controller : ControllerBase
     {
-        //private readonly IUnitofWork _unitOfWork;
+        //private readonly IUnitOfWork _unitOfWork;
         //private readonly ILogger<CountryController> _logger;
         //private readonly IMapper _mapper;
         private readonly DatabaseContext _database;
@@ -26,7 +26,7 @@ namespace WebApplication5.Controllers
             _database = database;
         }
 
-        //public CountryV2Controller(IUnitofWork unitOfWork, ILogger<CountryController> logger, IMapper mapper)
+        //public CountryV2Controller(IUnitOfWork unitOfWork, ILogger<CountryController> logger, IMapper mapper)
         //{
         //    _unitOfWork = unitOfWork;
         //    _logger = logger;
@@ -37,9 +37,9 @@ namespace WebApplication5.Controllers
          
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetCountries( )
+        public  IActionResult GetCountries( )
         { 
-            return Ok(_database.Countries);
+            return  Ok(_database.Countries);
 
         }
         //[HttpGet("{id:int}", Name = "GetCountry")]

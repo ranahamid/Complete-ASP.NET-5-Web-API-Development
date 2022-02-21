@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using WebApplication5.Data;
 using WebApplication5.IRepository;
 using WebApplication5.Models;
@@ -17,11 +18,11 @@ namespace WebApplication5.Controllers
     [ApiController]
     public class CountryController : ControllerBase
     {
-        private readonly IUnitofWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<CountryController> _logger;
         private readonly IMapper _mapper;
 
-        public CountryController(IUnitofWork unitOfWork, ILogger<CountryController> logger, IMapper mapper)
+        public CountryController(IUnitOfWork unitOfWork, ILogger<CountryController> logger, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
@@ -31,7 +32,7 @@ namespace WebApplication5.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ResponseCache(CacheProfileName = "120SecondsCacheDuration")]
+        //[ResponseCache(CacheProfileName = "120SecondsCacheDuration")]
         [HttpCacheExpiration(CacheLocation = CacheLocation.Private, MaxAge = 60)]
         [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> GetCountries(/*[FromQuery]*/ RequestParams model)
@@ -48,7 +49,7 @@ namespace WebApplication5.Controllers
         public async Task<IActionResult> GetCountry(int id)
         {
 
-            var country = await _unitOfWork.Countries.Get(x => x.Id == id, new List<string> { "Hotels" });
+            var country = await _unitOfWork.Countries.Get(x => x.Id == id, x=> x.Include(y=>y.Hotels));
             var result = _mapper.Map<CountryDto>(country);
 
             return Ok(result);

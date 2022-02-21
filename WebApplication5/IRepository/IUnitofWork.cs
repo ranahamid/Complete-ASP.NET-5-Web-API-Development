@@ -4,7 +4,7 @@ using WebApplication5.Data;
 
 namespace WebApplication5.IRepository
 {
-    public interface IUnitofWork:IDisposable 
+    public interface IUnitOfWork : IDisposable 
     {
         IGenericRepository<Country> Countries { get; }
         IGenericRepository<Hotel> Hotels { get;   }

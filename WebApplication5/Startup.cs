@@ -51,23 +51,30 @@ namespace WebApplication5
             services.ConfigureJwt(configuration:Configuration);
             services.AddCors(x =>
             {
-                x.AddPolicy("AllowAll", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+                x.AddPolicy("AllowAll", 
+                    builder => builder.AllowAnyOrigin().
+                        AllowAnyMethod().
+                        AllowAnyHeader());
             });
             services.AddAutoMapper(typeof(MapperInitilizer));
-            services.AddTransient<IUnitofWork, UnitofWork>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAuthManager, AuthManager>();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Web Application", Version = "v1" });
-            });
-            services.AddControllers(x =>
-            {
-                x.CacheProfiles.Add("120SecondsCacheDuration", new CacheProfile
-                {
-                    Duration = 120,
-                    Location = ResponseCacheLocation.Any,
-                });
-            }).AddNewtonsoftJson(x=>x.SerializerSettings.ReferenceLoopHandling= Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.ConfigureSwaggerDoc();
+
+            //services.AddSwaggerGen(c =>
+            //{
+            //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Web Application", Version = "v1" });
+            //});
+            services.AddControllers(
+                //x =>
+                //        {
+                //            x.CacheProfiles.Add("120SecondsCacheDuration", new CacheProfile
+                //            {
+                //                Duration = 120,
+                //                Location = ResponseCacheLocation.Any,
+                //            });
+                //        }
+                ).AddNewtonsoftJson(x=>x.SerializerSettings.ReferenceLoopHandling= Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.ConfigureVersion();
 
         }

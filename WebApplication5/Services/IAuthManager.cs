@@ -8,5 +8,8 @@ namespace WebApplication5.Services
     {
         Task<bool> ValidateUser(LoginDto userLoginDto);
         Task<string> CreateToken();
+
+        Task<string> CreateRefreshToken();
+        Task<TokenRequest> VerifyRefreshToken(TokenRequest request);
     }
 }

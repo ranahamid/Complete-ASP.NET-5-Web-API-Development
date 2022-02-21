@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
@@ -69,14 +70,14 @@ namespace WebApplication5.Services
             return claims;
         }
 
-        private SigningCredentials GetSigningCredentials()
+        private static SigningCredentials GetSigningCredentials()
         {
             var key = Environment.GetEnvironmentVariable("KEY");
             if (string.IsNullOrEmpty(key))
             {
                 key = "755ec588-d5d9-4e86-aa9e-7e72d232968e";
             }
-            SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
             var cred = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
             return cred;
         }
@@ -86,6 +87,46 @@ namespace WebApplication5.Services
             _user = await _userManager.FindByNameAsync(userLoginDto.Email);
             var ispass = await _userManager.CheckPasswordAsync(_user, userLoginDto.Password);
             return _user != null && ispass;
+        }
+
+        public async Task<string> CreateRefreshToken()
+        {
+            try
+            {
+                await _userManager.RemoveAuthenticationTokenAsync(_user, "HotelListingApi", "RefreshToken");
+                var newRefreshToken = await _userManager.GenerateUserTokenAsync(_user, "HotelListingApi", "RefreshToken");
+                var result = await _userManager.SetAuthenticationTokenAsync(_user, "HotelListingApi", "RefreshToken", newRefreshToken);
+
+                return newRefreshToken;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+           
+        }
+
+        public async Task<TokenRequest> VerifyRefreshToken(TokenRequest request)
+        {
+            var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+            var tokenContent = jwtSecurityTokenHandler.ReadJwtToken(request.Token);
+            var username = tokenContent.Claims.ToList().FirstOrDefault(q => q.Type == ClaimTypes.Name)?.Value;
+            _user = await _userManager.FindByNameAsync(username);
+            try
+            {
+                var isValid = await _userManager.VerifyUserTokenAsync(_user, "HotelListingApi", "RefreshToken", request.RefreshToken);
+                if (isValid)
+                {
+                    return new TokenRequest { Token = await CreateToken(), RefreshToken = await CreateRefreshToken() };
+                }
+                await _userManager.UpdateSecurityStampAsync(_user);
+            }
+            catch (Exception ex)
+            {
+                //throw ex;
+            }
+
+            return null;
         }
     }
 }

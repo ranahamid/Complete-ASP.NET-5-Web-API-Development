@@ -4,6 +4,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using WebApplication5.Data;
 using WebApplication5.IRepository;
@@ -18,9 +19,9 @@ public class HotelController : ControllerBase
     // private readonly ILogger _logger;
     private readonly ILogger<HotelController> _logger;
     private readonly IMapper _mapper;
-    private readonly IUnitofWork _unitOfWork;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public HotelController(IUnitofWork unitOfWork, ILogger<HotelController> logger, IMapper mapper)
+    public HotelController(IUnitOfWork unitOfWork, ILogger<HotelController> logger, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;
@@ -44,7 +45,7 @@ public class HotelController : ControllerBase
     //[Authorize]
     public async Task<IActionResult> GetHotel(int id)
     {
-        var hotel = await _unitOfWork.Hotels.Get(x => x.Id == id, new List<string> {"Country"});
+        var hotel = await _unitOfWork.Hotels.Get(x => x.Id == id, x => x.Include(y => y.Country));
         var result = _mapper.Map<HotelDto>(hotel);
 
         return Ok(result);
