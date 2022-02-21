@@ -150,14 +150,14 @@ namespace WebApplication5
                 new RateLimitRule
                 {
                     Endpoint = "*",
-                    Limit = 1,
+                    Limit = 10,
                     Period = "10s",
                 },
                 new RateLimitRule
                 {
                     Endpoint = "*",
                     Period = "1h",
-                    Limit = 360,
+                    Limit = 3600,
                 }
             };
 

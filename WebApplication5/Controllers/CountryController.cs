@@ -46,6 +46,7 @@ namespace WebApplication5.Controllers
         [HttpGet("{id:int}", Name = "GetCountry")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize]
         public async Task<IActionResult> GetCountry(int id)
         {
 
